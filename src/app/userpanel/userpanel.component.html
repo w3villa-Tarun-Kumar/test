@@ -1,0 +1,30 @@
+
+
+
+<h1>Welcome {{username}} ! Create and save your notes..</h1>
+<form>
+<editor
+  initialValue="<p>Create your notes</p>"
+  [init]="{
+    height: 500,
+    menubar: false,
+    plugins: [
+      'advlist autolink lists link image charmap print',
+      'preview anchor searchreplace visualblocks code',
+      'fullscreen insertdatetime media table paste',
+      'help wordcount'
+    ],
+    toolbar:
+      'undo redo | formatselect | bold italic | \
+      alignleft aligncenter alignright alignjustify | \
+      bullist numlist outdent indent | help'
+  }"
+>
+</editor>
+<div style="margin-top:10px" class="form-group">
+    <div class="col-sm-12 controls">
+        
+        <button type="button" class="btn btn-primary btn-lg btn-block">UPDATE</button>
+    </div>
+</div>
+</form>

@@ -9,6 +9,10 @@ export class LoginComponent implements OnInit {
 
   constructor() { }
 
+  logincheck(){
+    
+  }
+
   ngOnInit(): void {
   }
 

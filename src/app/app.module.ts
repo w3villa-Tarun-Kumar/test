@@ -6,6 +6,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServicesComponent } from './services/services.component';
 import { LoginModule } from './login/login.module';
 import { HeaderComponent } from './header/header.component';
+import { UserpanelModule } from './userpanel/userpanel.module';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -15,6 +17,7 @@ import { HeaderComponent } from './header/header.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    UserpanelModule,
     LoginModule,
     BrowserAnimationsModule
   ],
