@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormGroupName, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { SignupService } from '../signup.service';
 
 @Component({
   selector: 'app-login',
@@ -9,38 +10,61 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
-  constructor( private router: Router) { } 
-  
-  loginform=new FormGroup({
-    username: new FormControl('', [Validators.minLength(4),Validators.required]),    
-    password: new FormControl('', [Validators.required,Validators.minLength(8)])
+  constructor(private router: Router, private servsignup: SignupService) { }
+
+  loginform = new FormGroup({
+    username: new FormControl('', [Validators.minLength(4), Validators.required]),
+    password: new FormControl('', [Validators.required, Validators.minLength(4)])
   })
 
-  get username() {return this.loginform.get('username')}
-  get password() {return this.loginform.get('password')}
+  get username() { return this.loginform.get('username') }
+  get password() { return this.loginform.get('password') }
+
+  uname = '';
+  pswd = '';
+  userid = '';
+  errmsg = false;
 
   onSubmit() {
-    // TODO: Use EventEmitter with form value
-    console.warn(this.loginform.value);
-    this.router.navigateByUrl('/userpanel');
+    this.uname = this.loginform.value.username;
+    this.pswd = this.loginform.value.password;
+    this.servsignup.getrecord(this.uname).subscribe((records: any) => {
+
+      if (this.pswd == records.data.user_password) {
+        this.userid = records.data.id;
+        this.router.navigateByUrl('/userpanel/' + this.userid);
+
+      }
+      else {
+        this.errmsg = true;
+      }
+    });
   }
 
-  signupform=new FormGroup({
-    username: new FormControl('',[Validators.required, Validators.minLength(4)]),
-    password: new FormControl('', [Validators.required, Validators.minLength(8)]),
-    useremail: new FormControl('', [Validators.required, Validators.email]),
-    phone: new FormControl('', [Validators.required, Validators.minLength(10)]),
+
+  /* -----------Signup Form ---------*/
+
+
+  signupform = new FormGroup({
+    user_name: new FormControl('', [Validators.required, Validators.minLength(4)]),
+    user_password: new FormControl('', [Validators.required, Validators.minLength(8)]),
+    user_email: new FormControl('', [Validators.required, Validators.email]),
+    title: new FormControl('title'),
+    //phone: new FormControl('', [Validators.required, Validators.minLength(10)]),
 
   })
 
   signup() {
-    // TODO: Use EventEmitter with form value
-    console.warn(this.signupform.value);
-
-    this.router.navigateByUrl('/login');
+    this.servsignup.enrolluser(this.signupform.value).subscribe((records: any) => {
+      //console.warn(records.data.id);
+      if(records.status==200){
+        this.userid = records.data.id;
+        this.router.navigateByUrl('/userpanel/'+this.userid);
+      }
+    });
   }
-
   ngOnInit(): void {
+
   }
 
 }

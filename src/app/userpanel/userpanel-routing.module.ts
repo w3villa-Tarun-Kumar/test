@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { UserpanelComponent } from './userpanel.component';
 
 const routes: Routes = [
-  { path:'userpanel', component:UserpanelComponent}
+  { path:'userpanel/:id', component:UserpanelComponent}
 ];
 
 @NgModule({

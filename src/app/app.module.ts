@@ -7,6 +7,7 @@ import { ServicesComponent } from './services/services.component';
 import { LoginModule } from './login/login.module';
 import { HeaderComponent } from './header/header.component';
 import { UserpanelModule } from './userpanel/userpanel.module';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -19,6 +20,7 @@ import { UserpanelModule } from './userpanel/userpanel.module';
     BrowserModule,
     AppRoutingModule,
     UserpanelModule,
+    HttpClientModule,
     LoginModule,
     BrowserAnimationsModule
   ],
