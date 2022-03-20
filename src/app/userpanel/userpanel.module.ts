@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { UserpanelRoutingModule } from './userpanel-routing.module';
 import { UserpanelComponent } from './userpanel.component';
+import { FormControl, FormsModule,ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -12,7 +13,9 @@ import { UserpanelComponent } from './userpanel.component';
   imports: [
     CommonModule,
     EditorModule,
-    UserpanelRoutingModule
+    UserpanelRoutingModule,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class UserpanelModule { }

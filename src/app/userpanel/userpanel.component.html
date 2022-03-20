@@ -1,7 +1,12 @@
-<h1>Welcome {{username}} ! Create and save your notes..</h1>
-<form>
-<editor
-  initialValue="<p>Create your notes</p>"
+<h1>Welcome {{userdata.user_name}} ! Create and save your notes..</h1>
+
+<form [formGroup]="notesform" (ngSubmit)="updatenotes()" method="post" class="form-horizontal" role="form">
+
+
+
+
+ <!-- <editor
+  initialValue="<p>{{userdata.notes}}</p>"
   [init]="{
     height: 500,
     menubar: false,
@@ -17,11 +22,21 @@
       bullist numlist outdent indent | help'
   }"
 >
-</editor>
+</editor>-->
+
+<div style="margin-bottom: 25px" class="input-group">
+  <input type="hidden" class="form-control" formControlName="userid" name="userid">
+</div>
+
+<div style="margin-bottom: 25px" class="input-group">
+  <textarea class="form-control" formControlName="notes" name="notes"></textarea>
+  <span class="err" *ngIf="notes?.invalid">Enter Add Notes</span>
+</div>
+
+
 <div style="margin-top:10px" class="form-group">
-    <div class="col-sm-12 controls">
-        
-        <button type="button" class="btn btn-primary btn-lg btn-block">UPDATE</button>
-    </div>
+  <div class="col-sm-12 controls">
+      <button type="submit" [disabled]="!notesform.valid" class="btn btn-primary btn-lg btn-block">Update</button>
+  </div>
 </div>
 </form>

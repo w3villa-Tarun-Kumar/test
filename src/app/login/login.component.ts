@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, FormGroupName, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SignupService } from '../signup.service';
+
 
 @Component({
   selector: 'app-login',
@@ -9,6 +10,9 @@ import { SignupService } from '../signup.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+
+  @Output() appparent:EventEmitter<any> = new EventEmitter();
+  @Output() uspanel=new EventEmitter<any>();
 
   constructor(private router: Router, private servsignup: SignupService) { }
 
@@ -25,13 +29,26 @@ export class LoginComponent implements OnInit {
   userid = '';
   errmsg = false;
 
+
   onSubmit() {
     this.uname = this.loginform.value.username;
     this.pswd = this.loginform.value.password;
+
+    
     this.servsignup.getrecord(this.uname).subscribe((records: any) => {
 
+    //console.warn(this.pswd +'='+ records.data.user_password);
+     
       if (this.pswd == records.data.user_password) {
         this.userid = records.data.id;
+        //this.servsignup.sendMessage(this.uname);
+        this.appparent.emit({
+          pname:this.uname,
+          pid:this.userid
+        });
+        
+        this.uspanel.emit(this.uname);
+                
         this.router.navigateByUrl('/userpanel/' + this.userid);
 
       }
@@ -59,12 +76,19 @@ export class LoginComponent implements OnInit {
       //console.warn(records.data.id);
       if(records.status==200){
         this.userid = records.data.id;
+        //this.servsignup.sendMessage('goodmorining');
         this.router.navigateByUrl('/userpanel/'+this.userid);
+        
+        this.appparent.emit({
+        pname:this.uname,
+        pid:this.userid
+      });
+      
       }
     });
   }
   ngOnInit(): void {
-
+      
   }
 
 }
