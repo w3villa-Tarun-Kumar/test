@@ -14,7 +14,15 @@ export class LoginComponent implements OnInit {
   @Output() appparent:EventEmitter<any> = new EventEmitter();
   @Output() uspanel=new EventEmitter<any>();
 
-  constructor(private router: Router, private servsignup: SignupService) { }
+  uname = '';
+  pswd = '';
+  userid = '';
+  errmsg = false;
+  alertmessage=false;
+  
+  constructor(private router: Router, private servsignup: SignupService) {
+    this.uname = '';
+  }
 
   loginform = new FormGroup({
     username: new FormControl('', [Validators.minLength(4), Validators.required]),
@@ -24,33 +32,17 @@ export class LoginComponent implements OnInit {
   get username() { return this.loginform.get('username') }
   get password() { return this.loginform.get('password') }
 
-  uname = '';
-  pswd = '';
-  userid = '';
-  errmsg = false;
+ 
 
 
   onSubmit() {
     this.uname = this.loginform.value.username;
-    this.pswd = this.loginform.value.password;
-
-    
+    this.pswd = this.loginform.value.password;   
     this.servsignup.getrecord(this.uname).subscribe((records: any) => {
-
-    //console.warn(this.pswd +'='+ records.data.user_password);
-     
-      if (this.pswd == records.data.user_password) {
+      if ((this.pswd == records.data.user_password) && (this.uname != '')) {
         this.userid = records.data.id;
-        //this.servsignup.sendMessage(this.uname);
-        this.appparent.emit({
-          pname:this.uname,
-          pid:this.userid
-        });
-        
-        this.uspanel.emit(this.uname);
-                
-        this.router.navigateByUrl('/userpanel/' + this.userid);
-
+        this.servsignup.sendMessage(records.data);   
+        localStorage.setItem('userid',this.userid);
       }
       else {
         this.errmsg = true;
@@ -73,22 +65,24 @@ export class LoginComponent implements OnInit {
 
   signup() {
     this.servsignup.enrolluser(this.signupform.value).subscribe((records: any) => {
-      //console.warn(records.data.id);
+      console.warn(records.data);
       if(records.status==200){
         this.userid = records.data.id;
-        //this.servsignup.sendMessage('goodmorining');
-        this.router.navigateByUrl('/userpanel/'+this.userid);
+        this.alertmessage=true;
+        setTimeout(() => this.router.navigateByUrl('/login'), 3000);
         
-        this.appparent.emit({
-        pname:this.uname,
-        pid:this.userid
-      });
-      
+        //this.router.navigateByUrl('/userpanel/'+this.userid);
+        
       }
     });
   }
   ngOnInit(): void {
-      
+    this.servsignup.getMessage().subscribe((res) => {
+      //console.warn("login", res.user_name);
+      if(res.user_name!=''){
+        this.router.navigateByUrl('/userpanel/'+res.id);
+      }
+     })
   }
 
 }

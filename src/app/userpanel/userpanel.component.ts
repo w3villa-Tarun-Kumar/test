@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SignupService } from '../signup.service';
-import { ActivatedRoute } from '@angular/router'
+import { ActivatedRoute, Router } from '@angular/router'
 
 @Component({
   selector: 'app-userpanel',
@@ -12,22 +12,20 @@ export class UserpanelComponent implements OnInit {
 
   userdata:any='';  
   usernotes='Enter your notes';
-  //this.servsignup.getrecord(this.uname).subscribe((records: any) => {
+  userid:any='';
+  updatemessage=false;
+  
+  constructor(private router:Router, private servsignup: SignupService, private routepmter:ActivatedRoute) { 
+   //console.warn(this.routepmter.snapshot.params['id']);
+}
 
-
-  constructor(private servsignup: SignupService, private routepmter:ActivatedRoute) { 
-    
-  // console.warn(this.routepmter.snapshot.params);
-  this.servsignup.getrecordbyid(this.routepmter.snapshot.params).subscribe((records:any) =>{
-  this.userdata=records.data;
-  this.usernotes=records.data.notes;
-   })
-
+  alsertclose(){
+    this.updatemessage=false;
   }
 
   notesform = new FormGroup({
-    userid: new FormControl('1'),
-    notes: new FormControl(this.usernotes, [Validators.required, Validators.minLength(4)])
+    userid: new FormControl(''),
+    notes: new FormControl('', [Validators.required, Validators.minLength(4)])
   })
 
   get notes() { return this.notesform.get('notes') }
@@ -38,7 +36,8 @@ export class UserpanelComponent implements OnInit {
     this.servsignup.updateusernotes(this.notesform.value).subscribe((records: any) => {
       console.warn(records);
       if(records.status==200){
-        
+        this.updatemessage=true;        
+        setTimeout(() => this.alsertclose(), 3000);
         //this.router.navigateByUrl('/userpanel/'+this.userid);
         
       }
@@ -49,7 +48,21 @@ export class UserpanelComponent implements OnInit {
 
 
 
-  ngOnInit(): void {
+  ngOnInit(): void {    
+    this.userid = localStorage.getItem('userid');
+    if(this.userid!=null){
+      this.servsignup.getrecordbyid(this.userid).subscribe((records: any) => {
+      this.userdata = records.data;
+      this.usernotes = records.data.notes;
+      this.notesform.patchValue({
+        userid: records.data.id,
+        notes: records.data.notes
+      });
+    })
+    }
+    else{
+      this.router.navigateByUrl('/');
+    }
 
   }
 

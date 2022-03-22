@@ -1,34 +1,41 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
 export class SignupService {
 
-private approvalStageMessage = new Subject<any>();
+public approvalStageMessage = new Subject<any>();
+private subject = new Subject<any>();
+
 teachermessage$ = this.approvalStageMessage.asObservable();
 
-sendMessage(message: string) {
-this.approvalStageMessage.next(message);
-console.warn(message);
+sendMessage(message: any) {
+  this.subject.next(message);
+  //console.warn(message);
 }
-  
-  constructor( private gethttp : HttpClient, ) { }
 
-  listurl='http://127.0.0.1/notes/?uname=';
-  idurl='http://127.0.0.1/notes/?uid=';
+getMessage(): Observable<any> {
+  return this.subject.asObservable();
+}
+
+
+listurl='http://127.0.0.1/notes/?uname=';
+idurl='http://127.0.0.1/notes/?uid=';
+
+constructor( private gethttp : HttpClient, ) {  }
+
+ 
 
   getrecord(uname:any)
   {
-    this.listurl=this.listurl+uname;
-    return this.gethttp.get(this.listurl);
+    return this.gethttp.get(this.listurl+uname);
   }
 
   getrecordbyid(uid:any)
   {
-    this.idurl=this.idurl+uid.id;
-    return this.gethttp.get(this.idurl);
+    return this.gethttp.get(this.idurl+uid);
   }
 
   posturl='http://127.0.0.1/notes/';
